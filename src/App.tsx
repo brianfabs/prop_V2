@@ -6,6 +6,7 @@ import CreateAccount from './pages/CreateAccount';
 import ProposalView from './pages/ProposalView';
 import CreateProposal from './pages/CreateProposal';
 import EditProposal from './pages/EditProposal';
+import AdminDashboard from './pages/AdminDashboard';
 import { auth } from './firebase/firebase-config';
 import { signOut } from 'firebase/auth';
 
@@ -52,6 +53,7 @@ function AppRoutes() {
         <Route path="/proposal/:id" element={<ProposalView />} />
         <Route path="/create-proposal" element={<CreateProposal />} />
         <Route path="/edit-proposal/:id" element={<EditProposal />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/" element={<Navigate to="/login" replace />} />
       </Routes>
     </>

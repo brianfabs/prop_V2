@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../firebase/firebase-config';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
@@ -8,6 +8,7 @@ import TableActionsMenu from '../components/TableActionsMenu';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [proposals, setProposals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,9 +79,9 @@ const Dashboard: React.FC = () => {
           </span>
         </div>
         <div className="flex gap-4 sm:gap-8 items-center mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-start">
-          <a href="#" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</a>
-          <a href="#" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</a>
-          <a href="#" className="text-gray-700 hover:text-blue-900 font-medium">Admin</a>
+          <Link to="/dashboard" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</Link>
+          <Link to="/create-proposal" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</Link>
+          <Link to="/admin" className="text-gray-700 hover:text-blue-900 font-medium">Admin</Link>
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-end">
           <span className="font-medium text-gray-700">Brian</span>
@@ -137,7 +138,7 @@ const Dashboard: React.FC = () => {
                           : 'N/A'}
                       </td>
                       <td className="py-3 px-2 sm:px-4">
-                        <TableActionsMenu proposalId={proposal.id} onDelete={() => openDeleteModal(proposal)} />
+                        <TableActionsMenu key={proposal.id + location.pathname} proposalId={proposal.id} onDelete={() => openDeleteModal(proposal)} />
                       </td>
                     </tr>
                   ))}

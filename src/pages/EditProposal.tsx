@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { db } from '../firebase/firebase-config';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 
@@ -72,9 +72,9 @@ const EditProposal: React.FC = () => {
           </span>
         </div>
         <div className="flex gap-4 sm:gap-8 items-center mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-start">
-          <a href="/dashboard" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</a>
-          <a href="/create-proposal" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</a>
-          <a href="#" className="text-gray-700 hover:text-blue-900 font-medium">Admin</a>
+          <Link to="/dashboard" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</Link>
+          <Link to="/create-proposal" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</Link>
+          <Link to="/admin" className="text-gray-700 hover:text-blue-900 font-medium">Admin</Link>
         </div>
         <div className="flex items-center gap-4 mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-end">
           <span className="font-medium text-gray-700">Brian</span>
