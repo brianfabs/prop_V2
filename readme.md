@@ -27,45 +27,8 @@ A comprehensive web-based sales proposal application for roofing companies to cr
 - **Debug Tools**: Toggle-able debug panel for troubleshooting
 - **Live Preview**: Real-time preview of changes in admin interfaces
 
+## Technology Stack
 
-## Data Structure
-
-### Enhanced Roofing Options Collection
-```javascript
-{
-  type: "good" | "better" | "best",
-  title: "Option Title",
-  description: "Detailed description",
-  warranty: "Warranty information",
-  image: "Image URL",
-  pricePerSquare: 625.00,        // Standard pricing (≥16 squares)
-  pricePerSquareUnder16: 725.00  // Higher pricing (<16 squares)
-}
-```
-
-### Proposals Collection
-```javascript
-{
-  customerName: "Customer Name",
-  address: "Property Address", 
-  squares: 25.5,
-  createdBy: "user@company.com",
-  createdAt: timestamp,
-  updatedAt: timestamp,
-  updatedBy: "user@company.com"
-}
-```
-
-### Loan Options Collection
-```javascript
-{
-  name: "Financing Option Name",
-  years: 15,    // Term length in years
-  rate: 6.99    // Annual percentage rate
-}
-```
-
-## Application Structure
 
 ## Pricing Logic
 The application implements dynamic pricing based on project size:
@@ -86,8 +49,6 @@ Where:
 
 ## Firebase Configuration
 
-The app requires a `firebase-config.js` file with your Firebase credentials:
-
 ```javascript
 const firebaseConfig = {
   apiKey: "YOUR_API_KEY",
@@ -101,3 +62,86 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 ```
 
+## File Structure
+```
+├── login.html / login.js           # Authentication
+├── dashboard.html / dashboard.js   # Proposal management
+├── create_proposal.html / create_proposal.js # Proposal creation
+├── edit_proposal.html             # Proposal editing
+├── proposal.html                  # Customer-facing proposal view
+├── admin.html / admin.js          # Content management
+├── loan_admin.html               # Loan options management
+├── user-management.html / user-management.js # User administration
+├── main.css                      # Design system
+├── firebase-config.js            # Firebase configuration
+└── README.md                     # Documentation
+```
+
+## Recent Updates
+
+### Version 2.0 Features
+- **Enhanced Pricing**: Added support for small job pricing (<16 squares)
+- **Loan Integration**: Complete financing options with payment calculations
+- **Navigation Standardization**: Reusable navigation component across pages
+- **Admin Enhancements**: Loan options management and debug tools
+- **Improved UX**: Streamlined customer-facing proposal display
+
+### Security Considerations
+- Simple authentication system (development/demo purposes)
+- Admin role validation for content management
+- Client-side form validation with server-side constraints
+- Error handling and user feedback systems
+
+## Development Status
+Work in progress - Core features implemented with ongoing enhancements for production readiness.
+
+## For AI/Developer Reference
+
+This section provides additional details for AI or developers to understand the app's structure and data flow.
+
+### App Structure
+- The app is built using React with Vite, using functional components and hooks.
+- All pages are located in `src/pages/` (e.g., `Login.tsx`, `Dashboard.tsx`, `ProposalView.tsx`).
+- Routing is handled by React Router, with routes defined in `src/App.tsx`.
+- Firebase Firestore is used for all data storage, with collections for `proposals`, `roofing_options`, `loan_options`, and `users`.
+
+### Data Flow
+- **Dashboard**: Fetches all proposals from Firestore and displays them in a table. The "View" button links to `/proposal/{id}` using the real Firestore document ID.
+- **ProposalView**: Reads the proposal ID from the URL, fetches the proposal document, and displays customer/project info. It also fetches `roofing_options` and `loan_options` for dynamic pricing and options.
+- **Firestore Timestamps** are converted to readable dates before rendering.
+- All Firestore fetch logic is in `src/services/firebase.ts` or directly in the relevant page (e.g., Dashboard, ProposalView).
+
+### Firestore Collections
+- `proposals`: Stores each proposal (fields: `customerName`, `address`, `squares`, `createdAt`, etc.).
+- `roofing_options`: Stores all available roofing options, pricing, and descriptions.
+- `loan_options`: Stores all available financing options.
+- `users`: Stores user accounts.
+
+### Extending the App
+- Add new pages to `src/pages/` and new routes in `src/App.tsx`.
+- For new Firestore collections, add fetch logic in `src/services/firebase.ts`.
+- Use Tailwind CSS for all new UI.
+
+### Debugging Tips
+- If you see a blank page, check the browser console for errors (often due to Firestore Timestamps or missing fields).
+- Defensive checks are in place for missing or malformed data.
+- If you add new fields to Firestore, update the relevant page/component to render them.
+
+## Recent UI/UX Improvements (2024)
+
+### Table Action Menu
+- All row actions (View, Edit, Delete) are now consolidated into a single 3-dots (kebab) menu using the `TableActionsMenu` component.
+- The dropdown menu is right-aligned with the button and appears exactly 4px below (or above, if not enough space) the button.
+- The dropdown uses a React portal for correct z-index and overlays.
+- The dropdown closes on outside click, Escape key, or navigation.
+- The dropdown state is reset on route changes using React Router's `useLocation` to ensure the menu always works after navigating away and back.
+- The dropdown menu is accessible and keyboard-navigable.
+
+### Consistent Field Label Styling
+- All input, select, and dropdown field labels use a consistent style: 12px font size and 70% text color opacity (`text-[12px] text-gray-900/70`).
+- This applies to all forms, including login, create/edit proposal, create account, and proposal view pages.
+
+### Other UI/UX Enhancements
+- Improved dropdown positioning and alignment for a more professional look.
+- Fixed issues with stale dropdown state after navigation.
+- All changes are implemented using Tailwind CSS utility classes for consistency.
