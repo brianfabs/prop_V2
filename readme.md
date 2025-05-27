@@ -27,12 +27,6 @@ A comprehensive web-based sales proposal application for roofing companies to cr
 - **Debug Tools**: Toggle-able debug panel for troubleshooting
 - **Live Preview**: Real-time preview of changes in admin interfaces
 
-## Technology Stack
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Backend**: Firebase Firestore (NoSQL database)
-- **Authentication**: localStorage-based user sessions
-- **Styling**: Custom CSS framework with professional design system
-- **Deployment**: Static web hosting compatible
 
 ## Data Structure
 
@@ -71,36 +65,7 @@ A comprehensive web-based sales proposal application for roofing companies to cr
 }
 ```
 
-### Users Collection
-```javascript
-{
-  email: "user@company.com",
-  fullName: "User Name",
-  password: "plaintext",
-  role: "user" | "admin"
-}
-```
-
 ## Application Structure
-
-### Customer-Facing Pages
-- `proposal.html` - Professional proposal display with pricing and financing options
-
-### Internal Management
-- `dashboard.html` - Proposal listing with edit/view controls
-- `create_proposal.html` - New proposal creation
-- `edit_proposal.html` - Proposal modification
-- `login.html` - User authentication
-
-### Admin Interface
-- `admin.html` - Roofing options content management
-- `loan_admin.html` - Financing options configuration  
-- `user-management.html` - User account administration
-
-### Shared Components
-- `main.css` - Professional design system and styling
-- `firebase-config.js` - Database configuration
-- Navigation component - Reusable navigation bar for internal pages
 
 ## Pricing Logic
 The application implements dynamic pricing based on project size:
@@ -136,35 +101,3 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 ```
 
-## File Structure
-```
-├── login.html / login.js           # Authentication
-├── dashboard.html / dashboard.js   # Proposal management
-├── create_proposal.html / create_proposal.js # Proposal creation
-├── edit_proposal.html             # Proposal editing
-├── proposal.html                  # Customer-facing proposal view
-├── admin.html / admin.js          # Content management
-├── loan_admin.html               # Loan options management
-├── user-management.html / user-management.js # User administration
-├── main.css                      # Design system
-├── firebase-config.js            # Firebase configuration
-└── README.md                     # Documentation
-```
-
-## Recent Updates
-
-### Version 2.0 Features
-- **Enhanced Pricing**: Added support for small job pricing (<16 squares)
-- **Loan Integration**: Complete financing options with payment calculations
-- **Navigation Standardization**: Reusable navigation component across pages
-- **Admin Enhancements**: Loan options management and debug tools
-- **Improved UX**: Streamlined customer-facing proposal display
-
-### Security Considerations
-- Simple authentication system (development/demo purposes)
-- Admin role validation for content management
-- Client-side form validation with server-side constraints
-- Error handling and user feedback systems
-
-## Development Status
-Work in progress - Core features implemented with ongoing enhancements for production readiness.
