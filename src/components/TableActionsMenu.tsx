@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ReactDOM from 'react-dom';
-import IconButton from './IconButton';
 
 interface TableActionsMenuProps {
   proposalId: string;
@@ -9,6 +8,7 @@ interface TableActionsMenuProps {
 }
 
 const DROPDOWN_WIDTH = 128;
+const DROPDOWN_HEIGHT = 120;
 
 const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelete }) => {
   const [open, setOpen] = useState(false);
@@ -17,130 +17,125 @@ const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelet
   const dropdownRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
 
-  // Always recalculate position on open
-  useEffect(() => {
-    if (open && btnRef.current) {
+  // Calculate dropdown position
+  const calculateDropdownPos = () => {
+    if (btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect();
-      const dropdownHeight = 120;
       const spaceBelow = window.innerHeight - rect.bottom;
       const spaceAbove = rect.top;
-      let top = rect.bottom + window.scrollY + 4; // 4px below
-      if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-        top = rect.top + window.scrollY - dropdownHeight - 4; // 4px above
+      let top = rect.bottom + 4;
+      if (spaceBelow < DROPDOWN_HEIGHT && spaceAbove > DROPDOWN_HEIGHT) {
+        top = rect.top - DROPDOWN_HEIGHT - 4;
       }
-      // Right align dropdown with button
-      setDropdownPos({
-        top,
-        left: rect.right - DROPDOWN_WIDTH + window.scrollX,
-      });
+      const left = rect.right - DROPDOWN_WIDTH;
+      setDropdownPos({ top, left });
+    }
+  };
+
+  // Open menu and set dropdown position
+  const handleButtonClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setOpen((prev) => !prev);
+  };
+
+  // Recalculate position on open, scroll, and resize
+  useEffect(() => {
+    if (open) {
+      calculateDropdownPos();
+      window.addEventListener('scroll', calculateDropdownPos, true);
+      window.addEventListener('resize', calculateDropdownPos);
+      return () => {
+        window.removeEventListener('scroll', calculateDropdownPos, true);
+        window.removeEventListener('resize', calculateDropdownPos);
+      };
     }
   }, [open]);
 
-  // Reset open state and position on unmount or route change
-  useEffect(() => {
-    setOpen(false);
-    setDropdownPos(null);
-  }, [location]);
-
-  // Close on outside click
+  // Close on outside click or Escape
   useEffect(() => {
     if (!open) return;
-    function handleClickOutside(e: MouseEvent) {
+    const handleClick = (e: MouseEvent) => {
       if (
-        btnRef.current && 
+        btnRef.current &&
         !btnRef.current.contains(e.target as Node) &&
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
         setOpen(false);
       }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [open]);
-
-  // Handle escape key
-  useEffect(() => {
-    if (!open) return;
-    function handleEscape(e: KeyboardEvent) {
-      if (e.key === 'Escape') {
-        setOpen(false);
-      }
-    }
+    };
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false);
+    };
+    document.addEventListener('mousedown', handleClick);
     document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
   }, [open]);
 
-  const handleButtonClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setOpen((v) => !v);
-  };
+  // Close on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
-  const dropdown = open && dropdownPos
-    ? ReactDOM.createPortal(
+  return (
+    <div className="relative inline-block">
+      <button
+        ref={btnRef}
+        className="flex items-center justify-center rounded-[10px] hover:bg-gray-100 focus:outline-none p-3"
+        style={{ width: 40, height: 40 }}
+        onClick={handleButtonClick}
+        aria-label="Actions"
+        type="button"
+      >
+        <span style={{ width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+            <circle cx="4" cy="10" r="2" />
+            <circle cx="10" cy="10" r="2" />
+            <circle cx="16" cy="10" r="2" />
+          </svg>
+        </span>
+      </button>
+      {open && dropdownPos && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
-          className="fixed z-[9999] w-32 bg-white border border-gray-200 shadow-lg py-1"
-          style={{ 
+          className="z-[99999] pointer-events-auto bg-white rounded-[10px] shadow-lg border border-gray-200 py-1"
+          style={{
+            position: 'fixed',
             top: dropdownPos.top,
             left: dropdownPos.left,
+            width: DROPDOWN_WIDTH,
             minWidth: DROPDOWN_WIDTH,
-            borderRadius: 10,
           }}
         >
           <Link
             to={`/proposal/${proposalId}`}
-            className="w-full block text-left px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-900 text-sm focus:outline-none transition-colors"
-            style={{ borderRadius: 0, border: 'none' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(false);
-            }}
+            className="block px-3 py-1.5 text-[14px] text-gray-900 hover:bg-gray-100 rounded-none"
+            onClick={() => setOpen(false)}
           >
             View
           </Link>
           <Link
             to={`/edit-proposal/${proposalId}`}
-            className="w-full block text-left px-3 py-1.5 bg-white hover:bg-gray-100 text-gray-900 text-sm focus:outline-none transition-colors"
-            style={{ borderRadius: 0, border: 'none' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              setOpen(false);
-            }}
+            className="block px-3 py-1.5 text-[14px] text-gray-900 hover:bg-gray-100 rounded-none"
+            onClick={() => setOpen(false)}
           >
             Edit
           </Link>
           <button
-            className="w-full text-left px-3 py-1.5 bg-white hover:bg-gray-100 text-red-600 text-sm focus:outline-none transition-colors"
-            style={{ borderRadius: 0, border: 'none' }}
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete();
+            className="block w-full text-left px-3 py-1.5 text-[14px] text-red-600 hover:bg-gray-100 rounded-none"
+            onClick={() => {
               setOpen(false);
+              onDelete();
             }}
           >
             Delete
           </button>
         </div>,
         document.body
-      )
-    : null;
-
-  return (
-    <div className="relative">
-      <IconButton
-        ref={btnRef}
-        icon={
-          <svg width={16} height={16} fill="currentColor" viewBox="0 0 24 24">
-            <circle cx="5" cy="12" r="2" />
-            <circle cx="12" cy="12" r="2" />
-            <circle cx="19" cy="12" r="2" />
-          </svg>
-        }
-        ariaLabel="More actions"
-        onClick={handleButtonClick}
-      />
-      {dropdown}
+      )}
     </div>
   );
 };

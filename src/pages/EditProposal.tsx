@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { db } from '../firebase/firebase-config';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import NavBar from '../components/NavBar';
 
 const EditProposal: React.FC = () => {
   const { id } = useParams();
@@ -64,28 +65,7 @@ const EditProposal: React.FC = () => {
 
   return (
     <main className="w-screen min-h-screen flex flex-col bg-gray-100">
-      {/* Navbar (reuse Dashboard style) */}
-      <nav className="w-full bg-white shadow flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4">
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
-          <span className="text-xl font-bold text-blue-900 flex items-center gap-2">
-            Global Roofing
-          </span>
-        </div>
-        <div className="flex gap-4 sm:gap-8 items-center mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-start">
-          <Link to="/dashboard" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</Link>
-          <Link to="/create-proposal" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</Link>
-          <Link to="/admin" className="text-gray-700 hover:text-blue-900 font-medium">Admin</Link>
-        </div>
-        <div className="flex items-center gap-4 mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-end">
-          <span className="font-medium text-gray-700">Brian</span>
-          <button
-            onClick={() => navigate('/login')}
-            className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition-colors"
-          >
-            Logout
-          </button>
-        </div>
-      </nav>
+      <NavBar userName="Brian" onLogout={() => navigate('/login')} />
       {/* Main Content */}
       <section className="flex flex-1 flex-col items-center justify-center w-full px-2 sm:px-4 py-8">
         <form

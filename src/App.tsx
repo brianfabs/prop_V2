@@ -39,24 +39,16 @@ function AppRoutes() {
   }, []);
 
   return (
-    <>
-      <div className="w-full bg-yellow-100 text-xs text-gray-900 p-2 border-b border-yellow-300">
-        <div><b>Debug Panel</b></div>
-        <div>Current Route: {location.pathname}</div>
-        <div>auth.currentUser: <pre className="inline whitespace-pre-wrap">{JSON.stringify(auth.currentUser, null, 2)}</pre></div>
-        {debugError && <div className="text-red-600">Error: {debugError}</div>}
-      </div>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/create-account" element={<CreateAccount />} />
-        <Route path="/proposal/:id" element={<ProposalView />} />
-        <Route path="/create-proposal" element={<CreateProposal />} />
-        <Route path="/edit-proposal/:id" element={<EditProposal />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
-      </Routes>
-    </>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/create-account" element={<CreateAccount />} />
+      <Route path="/proposal/:id" element={<ProposalView />} />
+      <Route path="/create-proposal" element={<CreateProposal />} />
+      <Route path="/edit-proposal/:id" element={<EditProposal />} />
+      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/" element={<Navigate to="/login" replace />} />
+    </Routes>
   );
 }
 

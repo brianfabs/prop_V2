@@ -5,6 +5,7 @@ import { signOut, onAuthStateChanged } from 'firebase/auth';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import ActionButton from '../components/ActionButton';
 import TableActionsMenu from '../components/TableActionsMenu';
+import HeaderNav from '../components/HeaderNav';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -70,31 +71,10 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <main className="w-screen min-h-screen flex flex-col bg-gray-100">
-      {/* Navbar */}
-      <nav className="w-full bg-white shadow flex flex-col sm:flex-row items-center justify-between px-4 sm:px-8 py-4">
-        <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
-          <span className="text-xl font-bold text-blue-900 flex items-center gap-2">
-            Global Roofing
-          </span>
-        </div>
-        <div className="flex gap-4 sm:gap-8 items-center mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-start">
-          <Link to="/dashboard" className="text-gray-700 hover:text-blue-900 font-medium">Dashboard</Link>
-          <Link to="/create-proposal" className="text-gray-700 hover:text-blue-900 font-medium">Create Proposal</Link>
-          <Link to="/admin" className="text-gray-700 hover:text-blue-900 font-medium">Admin</Link>
-        </div>
-        <div className="flex items-center gap-4 mt-2 sm:mt-0 w-full sm:w-auto justify-center sm:justify-end">
-          <span className="font-medium text-gray-700">Brian</span>
-          <button
-            onClick={handleLogout}
-            className="bg-red-600 text-white px-4 py-2 rounded-md font-semibold hover:bg-red-700 transition-colors"
-          >
-            Logout
-          </button>
-        </div>
-      </nav>
+    <main className="w-screen min-h-screen flex flex-col bg-white">
+      <HeaderNav userName="Brian" onLogout={handleLogout} />
       {/* Main Content */}
-      <section className="flex flex-1 flex-col items-center justify-center w-full px-2 sm:px-4 py-8">
+      <section className="flex flex-1 flex-col items-center justify-center w-full px-2 sm:px-4 py-8 bg-white">
         <div className="w-full max-w-5xl flex flex-col items-center">
           <h1 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-6 w-full text-center">Proposals Dashboard</h1>
           <Link
