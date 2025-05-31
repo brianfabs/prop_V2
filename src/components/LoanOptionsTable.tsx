@@ -47,6 +47,7 @@ export const LoanOptionsTable: React.FC<LoanOptionsTableProps> = ({ loanOptions,
               proposalId={option.id}
               onEdit={() => onEdit(option)}
               onDelete={() => onDelete(option)}
+              hideView={true}
             />
           </td>
         </tr>
