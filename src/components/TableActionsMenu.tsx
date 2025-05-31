@@ -5,12 +5,13 @@ import ReactDOM from 'react-dom';
 interface TableActionsMenuProps {
   proposalId: string;
   onDelete: () => void;
+  onEdit: (proposalId: string) => void;
 }
 
 const DROPDOWN_WIDTH = 128;
 const DROPDOWN_HEIGHT = 120;
 
-const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelete }) => {
+const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelete, onEdit }) => {
   const [open, setOpen] = useState(false);
   const [dropdownPos, setDropdownPos] = useState<{top: number, left: number} | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
@@ -115,15 +116,14 @@ const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelet
           >
             View
           </Link>
-          <Link
-            to={`/edit-proposal/${proposalId}`}
-            className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none no-underline transition-colors duration-200 ease-in-out"
+          <button
+            className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none transition-colors duration-200 ease-in-out"
             role="menuitem"
             tabIndex={0}
-            onClick={() => setOpen(false)}
+            onClick={() => { setOpen(false); onEdit(proposalId); }}
           >
             Edit
-          </Link>
+          </button>
           <div className="my-1 border-t border-gray-100" />
           <button
             className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none transition-colors duration-200 ease-in-out"

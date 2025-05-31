@@ -11,8 +11,7 @@ interface HeaderNavProps {
 }
 
 const tabs = [
-  { path: '/dashboard', label: 'Dashboard' },
-  { path: '/create-proposal', label: 'Create Proposal' },
+  { path: '/dashboard', label: 'Proposals' },
   { path: '/admin', label: 'Admin' },
 ];
 

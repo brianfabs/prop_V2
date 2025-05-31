@@ -9,6 +9,7 @@ import HeaderNav from '../components/HeaderNav';
 import { useRoofingOptions } from '../context/RoofingOptionsContext';
 import CreateProposalModal from '../components/CreateProposalModal';
 import { Button } from '../components/Button';
+import EditProposalModal from './EditProposal';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ const Dashboard: React.FC = () => {
   const [userName, setUserName] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editProposalId, setEditProposalId] = useState<string | null>(null);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -138,8 +141,13 @@ const Dashboard: React.FC = () => {
                           ? proposal.createdAt
                           : 'N/A'}
                       </td>
-                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-right">
-                        <TableActionsMenu key={proposal.id + location.pathname} proposalId={proposal.id} onDelete={() => openDeleteModal(proposal)} />
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-right flex gap-2 items-center justify-end">
+                        <TableActionsMenu
+                          key={proposal.id + location.pathname}
+                          proposalId={proposal.id}
+                          onDelete={() => openDeleteModal(proposal)}
+                          onEdit={(id) => { setEditProposalId(id); setEditModalOpen(true); }}
+                        />
                       </td>
                     </tr>
                   ))}
@@ -198,6 +206,30 @@ const Dashboard: React.FC = () => {
             setLoading(false);
           };
           fetchProposals();
+        }}
+      />
+      <EditProposalModal
+        open={editModalOpen}
+        proposalId={editProposalId}
+        onClose={() => setEditModalOpen(false)}
+        onSuccess={async () => {
+          setEditModalOpen(false);
+          setLoading(true);
+          setError(null);
+          try {
+            const user = auth.currentUser;
+            if (!user || !user.email) {
+              setProposals([]);
+              setLoading(false);
+              return;
+            }
+            const snapshot = await getDocs(collection(db, 'proposals'));
+            const allProposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setProposals(allProposals.filter((p: any) => p.createdBy === user.email));
+          } catch (err: any) {
+            setError('Failed to load proposals. Check your Firestore rules and network connection.');
+          }
+          setLoading(false);
         }}
       />
     </main>

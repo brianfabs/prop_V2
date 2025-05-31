@@ -1,0 +1,30 @@
+# Dashboard Proposal Table MDC Rules
+
+- Table container: \`bg-white rounded w-full min-w-[600px]\`
+- Table: \`w-full table-auto text-left border-collapse bg-white\`
+- Header row: no background, no hover, sticky if needed
+- Header cell:
+  - \`text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-left whitespace-nowrap\`
+  - Right-align numeric, currency, and action columns: add \`text-right\`
+- Body cell:
+  - \`text-sm text-gray-700 px-3 py-2 whitespace-normal\`
+  - Right-align numeric, currency, and action columns: add \`text-right\`
+- Row: \`bg-white border-b border-primary border-opacity-10 last:border-b-0\`
+- No row hover states
+- Actions cell: \`flex gap-2 items-center justify-end\`
+- Buttons in table:
+  - Use \`<Button variant="outline" />\`
+  - Add \`px-3 py-1 text-sm transition-colors duration-200 hover:text-[#7896CA] hover:border-[#7896CA]\`
+- Spacing:
+  - Use \`p-4\` for table container
+  - Use \`gap-4\` or \`space-y-4\` for vertical rhythm in containers
+- Typography:
+  - Table body: \`text-base font-normal\`
+  - Table header: \`text-xs font-medium uppercase tracking-wide text-primary\`
+- Accessibility:
+  - All action buttons must have \`aria-label\`
+  - Table must have a \`<caption>\` if used outside a card context
+- No custom or inline styles; use only Tailwind utility classes
+
+# Example usage:
+- Use these rules for all data tables (Proposals, Loan Options, Users, etc.) for visual and UX consistency.

@@ -97,14 +97,14 @@ const LoanOptions: React.FC = () => {
   };
 
   return (
-    <main className="flex-1 p-8 overflow-y-auto bg-gray-50 min-h-screen">
-      <section className="w-full max-w-6xl mx-auto space-y-8">
-        <div className="flex flex-row items-center justify-between mb-6">
+    <main className="min-h-screen bg-white flex flex-col">
+      <section className="w-full max-w-6xl mx-auto px-6 py-8 space-y-4">
+        <div className="flex flex-row items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-1">Loan Options</h1>
-            <div className="text-gray-600 text-base">Manage financing options and terms</div>
+            <h1 className="text-2xl font-medium text-primary mb-2">Loan Options</h1>
+            <div className="text-base text-gray-700">Manage financing options and terms</div>
           </div>
-          <Button variant="primary" onClick={() => { setModalMode('add'); setSelectedOption(null); setModalOpen(true); }}>Add Loan Option</Button>
+          <Button variant="primary" className="transition-colors duration-200 hover:text-[#7896CA]" onClick={() => { setModalMode('add'); setSelectedOption(null); setModalOpen(true); }}>Add Loan Option</Button>
         </div>
         <LoanOptionsTable
           loanOptions={loanOptions}

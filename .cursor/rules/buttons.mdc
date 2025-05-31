@@ -4,9 +4,67 @@ globs: ["src/components/Button.tsx", "src/components/**/*Button.tsx"]
 alwaysApply: true
 ---
 
-- Use `<Button variant="...">` only
-- Avoid raw `<button>` with custom classes
+- Use `<Button variant="...">` pattern from design system
+- Avoid raw `<button>` with custom classNames
 - Transitions: `transition-colors duration-200 ease-in-out`
 - Base: `px-4 py-2 text-base font-normal`
-- Hover: `hover:text-[#7896CA]`, `hover:bg-[#7896CA]`, or `hover:border-[#7896CA]`
+- No border-radius unless in variant
 - Disabled: `opacity-50 cursor-not-allowed`
+- Hover states must use `hover:text-[#7896CA]`, `hover:bg-[#7896CA]`, or `hover:border-[#7896CA]`
+
+### 🪄 Secondary Button Style
+
+- `text-[#7896CA]` for text
+- `border border-[#7896CA]`
+- `bg-white`
+- Hover: `hover:bg-[#f0f4fa]` with same text and border
+
+**Example:**
+```tsx
+<button className="px-4 py-2 text-base font-normal text-[#7896CA] bg-white border border-[#7896CA] rounded transition-colors duration-200 hover:bg-[#f0f4fa] hover:text-[#7896CA] hover:border-[#7896CA]">
+  Secondary Action
+</button>
+
+find .cursor/rules -name "*.mdc" -exec sed -i '' '1s|^|<!--\nThis file defines **Cursor MDC** (Markdown Configuration) rules for design enforcement.\nDo NOT confuse with Material Design Components.\nThese are for Tailwind utility enforcement only.\n-->\n\n|' {} +
+
+# Step 1: Remove old/invalid folders
+rm -rf cursor-rules
+
+# Step 2: Move all valid .mdc files to the official Cursor path
+mkdir -p .cursor/rules
+mv cursor-rules.rules/*.mdc .cursor/rules/ 2>/dev/null || true
+
+# Step 3: Confirm everything is in place
+ls -l .cursor/rules/*.mdc
+
+cat > .cursor/rules/tables.mdc << 'EOF'
+# Proposals Table MDC Rules
+
+- Table layout: `table-auto w-full border-collapse bg-white`
+- Table container: `rounded-xl bg-white p-4 border border-primary/24 overflow-auto`
+- Header row: no background, no hover, sticky if needed
+- Header cell:
+  - `text-xs font-medium uppercase tracking-wide text-primary px-4 py-2 border-b border-primary/36 text-left whitespace-nowrap`
+  - Right-align numeric, currency, and action columns: add `text-right`
+- Body cell:
+  - `text-sm text-gray-700 px-4 py-3 whitespace-normal`
+  - Right-align numeric, currency, and action columns: add `text-right`
+- Row divider: `border-b border-primary/24 last:border-b-0`
+- No row hover states
+- Actions cell: `flex gap-2 justify-end`
+- Buttons in table: 
+  - Use `<Button variant="outline" />`
+  - Add `transition-colors duration-200 hover:text-[#7896CA] hover:border-[#7896CA]`
+- Spacing:
+  - Use `p-4` for table container
+  - Use `gap-4` or `space-y-4` for vertical rhythm in containers
+- Typography:
+  - Table body: `text-base font-normal`
+  - Table header: `text-xs font-medium uppercase tracking-wide text-primary`
+- Accessibility:
+  - All action buttons must have `aria-label`
+  - Table must have a `<caption>` if used outside a card context
+- No custom or inline styles; use only Tailwind utility classes
+
+# Example usage:
+- Use these rules for all data tables (Proposals, Loan Options, Users, etc.) for visual and UX consistency.
