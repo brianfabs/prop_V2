@@ -30,14 +30,19 @@ const Login: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 font-sans">
-      <section className="flex flex-1 flex-col justify-center items-center w-full px-2 py-8">
+    <main
+      className="min-h-screen flex items-center justify-center font-sans bg-cover bg-center relative"
+      style={{ backgroundImage: 'url(https://getglobalroofing.com/wp-content/uploads/2025/01/AdobeStock_2619622-scaled.jpeg)' }}
+    >
+      {/* Overlay for readability */}
+      <div className="absolute inset-0 bg-black/40 z-0" aria-hidden="true" />
+      <section className="flex flex-1 flex-col justify-center items-center w-full px-2 py-8 z-10">
         <div className="w-full max-w-[500px] mx-auto rounded-xl bg-white p-6 border border-primary/24 space-y-4 flex flex-col items-center">
           {/* Logo */}
           <img src="/global-roofing-logo.png" alt="Global Roofing Logo" className="h-16 mb-2 mt-2" />
           {/* Header Group */}
           <div className="w-full flex flex-col items-center space-y-1">
-            <h1 className="text-3xl font-medium text-primary-dark text-center">Global Roofing Team Portal</h1>
+            <h1 className="text-3xl font-medium text-primary text-center">Global Roofing Team Portal</h1>
             <p className="text-base font-normal text-muted text-center">For authorized employees and contractors only.</p>
           </div>
           <form onSubmit={handleLogin} className="flex flex-col w-full space-y-4">
