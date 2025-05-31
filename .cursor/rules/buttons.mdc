@@ -1,0 +1,12 @@
+---
+description: Button component rules
+globs: ["src/components/Button.tsx", "src/components/**/*Button.tsx"]
+alwaysApply: true
+---
+
+- Use `<Button variant="...">` only
+- Avoid raw `<button>` with custom classes
+- Transitions: `transition-colors duration-200 ease-in-out`
+- Base: `px-4 py-2 text-base font-normal`
+- Hover: `hover:text-[#7896CA]`, `hover:bg-[#7896CA]`, or `hover:border-[#7896CA]`
+- Disabled: `opacity-50 cursor-not-allowed`

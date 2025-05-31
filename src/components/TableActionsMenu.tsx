@@ -27,7 +27,8 @@ const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelet
       if (spaceBelow < DROPDOWN_HEIGHT && spaceAbove > DROPDOWN_HEIGHT) {
         top = rect.top - DROPDOWN_HEIGHT - 4;
       }
-      const left = rect.right - DROPDOWN_WIDTH;
+      // Align right edge of dropdown with right edge of button
+      const left = rect.right - (dropdownRef.current?.offsetWidth || DROPDOWN_WIDTH);
       setDropdownPos({ top, left });
     }
   };
@@ -84,48 +85,50 @@ const TableActionsMenu: React.FC<TableActionsMenuProps> = ({ proposalId, onDelet
     <div className="relative inline-block">
       <button
         ref={btnRef}
-        className="flex items-center justify-center rounded-[10px] hover:bg-gray-100 focus:outline-none p-3"
-        style={{ width: 40, height: 40 }}
+        className="p-1 rounded border border-gray-200 bg-white flex items-center justify-center transition-colors focus:outline-none hover:border-primary"
         onClick={handleButtonClick}
         aria-label="Actions"
         type="button"
       >
-        <span style={{ width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
-            <circle cx="4" cy="10" r="2" />
-            <circle cx="10" cy="10" r="2" />
-            <circle cx="16" cy="10" r="2" />
-          </svg>
-        </span>
+        <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+          <circle cx="4" cy="10" r="2" />
+          <circle cx="10" cy="10" r="2" />
+          <circle cx="16" cy="10" r="2" />
+        </svg>
       </button>
       {open && dropdownPos && ReactDOM.createPortal(
         <div
           ref={dropdownRef}
-          className="z-[99999] pointer-events-auto bg-white rounded-[10px] shadow-lg border border-gray-200 py-1"
+          className="z-[99999] pointer-events-auto bg-white shadow-lg rounded-md border border-gray-200 py-1 min-w-max flex flex-col transition-opacity duration-200 ease-in-out opacity-100"
           style={{
             position: 'fixed',
             top: dropdownPos.top,
             left: dropdownPos.left,
-            width: DROPDOWN_WIDTH,
-            minWidth: DROPDOWN_WIDTH,
           }}
         >
           <Link
             to={`/proposal/${proposalId}`}
-            className="block px-3 py-1.5 text-[14px] text-gray-900 hover:bg-gray-100 rounded-none"
+            className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none no-underline transition-colors duration-200 ease-in-out"
+            role="menuitem"
+            tabIndex={0}
             onClick={() => setOpen(false)}
           >
             View
           </Link>
           <Link
             to={`/edit-proposal/${proposalId}`}
-            className="block px-3 py-1.5 text-[14px] text-gray-900 hover:bg-gray-100 rounded-none"
+            className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none no-underline transition-colors duration-200 ease-in-out"
+            role="menuitem"
+            tabIndex={0}
             onClick={() => setOpen(false)}
           >
             Edit
           </Link>
+          <div className="my-1 border-t border-gray-100" />
           <button
-            className="block w-full text-left px-3 py-1.5 text-[14px] text-red-600 hover:bg-gray-100 rounded-none"
+            className="w-full text-left px-3 py-1.5 text-[14px] text-gray-700 hover:text-primary hover:bg-gray-100 cursor-pointer rounded-none font-medium focus:outline-none border-none bg-transparent hover:border-none transition-colors duration-200 ease-in-out"
+            role="menuitem"
+            tabIndex={0}
             onClick={() => {
               setOpen(false);
               onDelete();

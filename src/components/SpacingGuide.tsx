@@ -1,6 +1,6 @@
 import React from 'react';
 
-const SpacingGuide: React.FC = () => {
+const SpacingGuide: React.FC<{ className?: string }> = ({ className = '' }) => {
   const spacingSizes = [
     { name: '0.5', value: '4px', usage: 'Fine-grained spacing, labels above inputs' },
     { name: '1', value: '8px', usage: 'Small gaps, tight spacing' },
@@ -12,24 +12,24 @@ const SpacingGuide: React.FC = () => {
   ];
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow">
-      <h2 className="text-xl font-bold text-blue-900 mb-4">Spacing Guide</h2>
+    <div className={`rounded-xl bg-white p-4 border border-primary/24 flex flex-col space-y-4 ${className}`}>
+      <h2 className="text-lg font-medium text-primary-dark mb-4">Spacing Guide</h2>
       <div className="space-y-4">
         {spacingSizes.map((size) => (
           <div key={size.name} className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-blue-100 flex items-center justify-center rounded">
-              {size.name}
+            <div className="w-16 h-16 bg-primary/10 flex items-center justify-center rounded">
+              <span className="text-xs font-medium uppercase text-primary">{size.name}</span>
             </div>
             <div>
-              <div className="font-medium">{size.value}</div>
-              <div className="text-sm text-gray-600">{size.usage}</div>
+              <div className="font-medium text-base text-gray-700">{size.value}</div>
+              <div className="text-base text-gray-700">{size.usage}</div>
             </div>
           </div>
         ))}
       </div>
-      <div className="mt-6 p-4 bg-gray-50 rounded">
-        <h3 className="font-medium mb-2">Usage Guidelines:</h3>
-        <ul className="list-disc list-inside text-sm text-gray-600 space-y-1">
+      <div className="mt-6 p-4 bg-muted rounded-xl">
+        <h3 className="text-lg font-medium text-primary-dark mb-2">Usage Guidelines:</h3>
+        <ul className="list-disc list-inside text-base text-gray-700 space-y-1">
           <li>Use spacing-0.5 (4px) for fine-grained spacing like labels above inputs</li>
           <li>Use spacing-1 (8px) for tight gaps between related elements</li>
           <li>Use spacing-2 (16px) for standard component padding and gaps</li>

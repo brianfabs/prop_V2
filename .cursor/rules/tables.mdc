@@ -1,0 +1,11 @@
+---
+description: Table UI component rules
+globs: ["src/components/**/*Table.tsx", "src/pages/**/*Table.tsx"]
+alwaysApply: true
+---
+
+- Header: `text-xs font-medium uppercase tracking-wide text-primary px-4 py-2 border-b border-primary/36`
+- Cell: `text-sm text-gray-700 px-4 py-3 whitespace-normal`
+- Row divider: `border-b border-primary/24`
+- Right-align: numeric/date/action columns
+- Hover: none

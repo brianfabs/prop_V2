@@ -1,0 +1,27 @@
+---
+description: Base rules for all React + Tailwind SaaS components
+globs: ["src/components/**/*.tsx"]
+alwaysApply: true
+---
+
+- Use Tailwind CSS utility classes only; **do not use inline styles** or `style={{ ... }}`.
+- Avoid `!important`; refactor styles using Tailwind tokens (e.g., `font-bold`, `shadow-md`, `bg-white`).
+- Transition effects should use Tailwind utilities like `transition-colors duration-200 ease-in-out`.
+- Prefer `className` over inline `style` for hover/focus effects (e.g., use `hover:bg-muted` not `onMouseOver`).
+- All components must accept a `className` prop and apply it to their root element.
+- Standard body text size is `text-base font-normal` (16px, weight 400) unless overridden by component variant.
+- Font weights should follow semantic intent:
+  - Regular: `font-normal` (400)
+  - Medium emphasis: `font-medium` (500)
+  - Emphasis: `font-semibold` (600)
+  - Strong emphasis: `font-bold` (700)
+- Use Tailwind text color tokens only (e.g., `text-gray-700`, `text-muted`, `text-primary`); avoid hex or rgba values.
+- Heading text sizes (all headers use `font-medium` weight 500):
+  - `h1`: `text-3xl font-medium text-primary`
+  - `h2`: `text-2xl font-medium text-primary`
+  - `h3`: `text-xl font-medium text-primary`
+  - `h4`: `text-lg font-medium text-primary`
+  - `h5`: `text-base font-medium text-primary`
+  - `h6`: `text-sm font-medium text-primary`
+- Label text should use `text-xs font-medium uppercase tracking-wide` (12px, all caps).
+- Use responsive variants like `md:text-4xl` for larger screens when needed.

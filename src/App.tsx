@@ -7,13 +7,20 @@ import ProposalView from './pages/ProposalView';
 import CreateProposal from './pages/CreateProposal';
 import EditProposal from './pages/EditProposal';
 import AdminDashboard from './pages/AdminDashboard';
+import ContentManagement from './pages/ContentManagement';
+import UserManagement from './pages/UserManagement';
+import LoanOptions from './pages/LoanOptions';
 import { auth } from './firebase/firebase-config';
 import { signOut } from 'firebase/auth';
+import { RoofingOptionsProvider } from './context/RoofingOptionsContext';
+import AdminLayout from './components/AdminLayout';
 
 function AppRoutes() {
   const location = useLocation();
   const navigate = useNavigate();
   const [debugError, setDebugError] = React.useState<string | null>(null);
+  const isAdmin = location.pathname.startsWith('/admin');
+
   useEffect(() => {
     let timeout: NodeJS.Timeout;
     const resetTimer = () => {
@@ -46,7 +53,12 @@ function AppRoutes() {
       <Route path="/proposal/:id" element={<ProposalView />} />
       <Route path="/create-proposal" element={<CreateProposal />} />
       <Route path="/edit-proposal/:id" element={<EditProposal />} />
-      <Route path="/admin" element={<AdminDashboard />} />
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminDashboard />} />
+        <Route path="content-management" element={<ContentManagement />} />
+        <Route path="user-management" element={<UserManagement />} />
+        <Route path="loan-options" element={<LoanOptions />} />
+      </Route>
       <Route path="/" element={<Navigate to="/login" replace />} />
     </Routes>
   );
@@ -54,9 +66,11 @@ function AppRoutes() {
 
 function App() {
   return (
-    <Router>
-      <AppRoutes />
-    </Router>
+    <RoofingOptionsProvider>
+      <Router>
+        <AppRoutes />
+      </Router>
+    </RoofingOptionsProvider>
   );
 }
 

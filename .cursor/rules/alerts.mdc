@@ -1,0 +1,9 @@
+---
+description: Alerts
+globs: ["src/components/**/*Alert.tsx"]
+alwaysApply: true
+---
+
+- Base: `rounded-md px-4 py-3 text-sm shadow-sm`
+- Colors: green/red/yellow for states
+- Hover close button: `hover:text-[#7896CA]`

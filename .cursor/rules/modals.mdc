@@ -1,0 +1,10 @@
+---
+description: Modals and Drawers
+globs: ["src/components/Drawer.tsx"]
+alwaysApply: true
+---
+
+- Center using `flex items-center justify-center`.
+- Use `z-50`, `fixed inset-0`, and `backdrop-blur-sm` for background dimming.
+- All modals should support ESC-to-close and focus trap behavior.
+- Apply `rounded-xl p-6 bg-white` to modal bodies.

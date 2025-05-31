@@ -5,23 +5,20 @@ interface IconButtonProps {
   onClick?: (e: React.MouseEvent) => void;
   ariaLabel: string;
   className?: string;
-  style?: React.CSSProperties;
 }
 
 const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(
-  ({ icon, onClick, ariaLabel, className = '', style }, ref) => {
+  ({ icon, onClick, ariaLabel, className = '' }, ref) => {
     return (
       <button
         type="button"
         aria-label={ariaLabel}
         onClick={onClick}
-        className={`flex items-center justify-center transition-colors focus:outline-none ${className}`}
-        style={{ width: 40, height: 40, padding: 12, borderRadius: 10, ...style }}
+        className={`border-0 bg-transparent focus:outline-none transition-colors ${className}`}
         ref={ref}
+        style={{ padding: 0, width: 'auto', height: 'auto' }}
       >
-        <span style={{ width: 16, height: 16, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {icon}
-        </span>
+        <span className="flex items-center justify-center">{icon}</span>
       </button>
     );
   }

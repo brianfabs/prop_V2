@@ -16,12 +16,16 @@ const PageTabs: React.FC = () => {
           <div key={tab.path} className="flex flex-col items-center">
             <Link
               to={tab.path}
-              className={`text-2xl font-bold px-4 py-2 transition-colors ${location.pathname === tab.path ? 'text-blue-900' : 'text-gray-700 hover:text-blue-900'}`}
+              className={`text-2xl font-bold px-4 py-2 rounded transition-colors
+                ${location.pathname === tab.path
+                  ? 'bg-primary text-white'
+                  : 'text-primary hover:bg-primary hover:text-white'}`}
+              tabIndex={0}
             >
               {tab.label}
             </Link>
             {location.pathname === tab.path && (
-              <div className="mt-2 w-20 h-3 rounded-b-full bg-blue-900" />
+              <div className="mt-2 w-20 h-3 rounded bg-primary" />
             )}
           </div>
         ))}

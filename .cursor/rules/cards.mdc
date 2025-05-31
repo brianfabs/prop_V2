@@ -1,0 +1,12 @@
+---
+description: Card UI component rules
+globs: ["src/components/**/*Card.tsx", "src/pages/**/*Card.tsx"]
+alwaysApply: true
+---
+
+- Base: `rounded-xl bg-white p-4 border border-primary/24 border-[1px]`
+- No drop shadows (`shadow-*`)
+- Use `space-y-4` or `gap-4` for internal layout
+- Titles: `text-lg font-medium text-primary`
+- Body: `text-base text-gray-700`
+- Hover: `hover:border-[#7896CA]`

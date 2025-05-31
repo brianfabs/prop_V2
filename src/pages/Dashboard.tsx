@@ -2,10 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../firebase/firebase-config';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc, getDoc } from 'firebase/firestore';
 import ActionButton from '../components/ActionButton';
 import TableActionsMenu from '../components/TableActionsMenu';
 import HeaderNav from '../components/HeaderNav';
+import { useRoofingOptions } from '../context/RoofingOptionsContext';
+import CreateProposalModal from '../components/CreateProposalModal';
+import { Button } from '../components/Button';
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -13,9 +16,11 @@ const Dashboard: React.FC = () => {
   const [proposals, setProposals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debug, setDebug] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [proposalToDelete, setProposalToDelete] = useState<any>(null);
+  const [userName, setUserName] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>('');
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -23,21 +28,28 @@ const Dashboard: React.FC = () => {
       setError(null);
       if (!user || !user.email) {
         setProposals([]);
+        setUserName('');
+        setUserEmail('');
         setLoading(false);
         return;
       }
       try {
+        const userDoc = await getDoc(doc(db, 'users', user.uid));
+        let fullName = '';
+        if (userDoc.exists && userDoc.exists()) {
+          const data = userDoc.data();
+          fullName = data.fullName || '';
+        }
+        if (!fullName && user.displayName) {
+          fullName = user.displayName;
+        }
+        setUserName(fullName);
+        setUserEmail(user.email || '');
         const snapshot = await getDocs(collection(db, 'proposals'));
         const allProposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
         setProposals(allProposals.filter((p: any) => p.createdBy === user.email));
-        (window as any).dashboardDebug = {
-          userEmail: user.email,
-          allProposals,
-          filteredProposals: allProposals.filter((p: any) => p.createdBy === user.email),
-        };
       } catch (err: any) {
         setError('Failed to load proposals. Check your Firestore rules and network connection.');
-        console.error('Error fetching proposals:', err);
       }
       setLoading(false);
     });
@@ -72,31 +84,40 @@ const Dashboard: React.FC = () => {
 
   return (
     <main className="w-screen min-h-screen flex flex-col bg-white">
-      <HeaderNav userName="Brian" onLogout={handleLogout} />
+      <HeaderNav userName={userName} userEmail={userEmail} onLogout={handleLogout} />
       {/* Main Content */}
-      <section className="flex flex-1 flex-col items-center justify-center w-full px-2 sm:px-4 py-8 bg-white">
-        <div className="w-full max-w-5xl flex flex-col items-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-blue-900 mb-6 w-full text-center">Proposals Dashboard</h1>
-          <Link
-            to="/create-proposal"
-            className="mb-6 px-6 py-2 bg-blue-900 text-white rounded-full font-semibold hover:bg-blue-800 transition-colors w-full max-w-xs text-center"
-          >
-            Create New Proposal
-          </Link>
-          <div className="w-full overflow-x-auto">
+      <section className="flex flex-1 flex-col w-full px-2 sm:px-4 py-8 bg-white pt-20">
+        <div className="w-full max-w-5xl mx-auto">
+          <div className="w-full flex flex-row items-end justify-between gap-6 mb-3">
+            <h1 className="text-left text-primary-dark flex items-center gap-2" style={{ fontSize: '2.4em', fontWeight: 300 }}>
+              Proposals Created
+              <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-white text-primary text-base font-semibold border border-primary/20">
+                {proposals.length}
+              </span>
+            </h1>
+            <Button
+              variant="primary"
+              className="max-w-xs text-center"
+              style={{ alignSelf: 'flex-start' }}
+              onClick={e => { e.preventDefault && e.preventDefault(); setShowCreateModal(true); }}
+            >
+              Create New Proposal
+            </Button>
+          </div>
+          <div className="w-full overflow-auto">
             {error && (
               <div className="text-red-600 text-center py-2">{error}</div>
             )}
-            <div className="bg-white rounded-lg shadow w-full min-w-[600px]">
-              <table className="w-full text-sm border-none rounded-[10px] overflow-hidden border-collapse border-spacing-0">
-                <thead>
-                  <tr className="bg-white border-b" style={{ borderBottom: '1px solid #eeeeee' }}>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Customer Name</th>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Address</th>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Squares</th>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Created By</th>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Created Date</th>
-                    <th className="py-3 px-3 text-left font-semibold text-xs whitespace-nowrap text-gray-900/70">Actions</th>
+            <div className="bg-white rounded w-full min-w-[600px]">
+              <table className="w-full table-auto text-left border-collapse bg-white">
+                <thead className="sticky top-0 z-10 bg-white">
+                  <tr>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-left whitespace-nowrap">Customer Name</th>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-left whitespace-nowrap">Address</th>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-right whitespace-nowrap">Squares</th>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-left whitespace-nowrap">Created By</th>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-right whitespace-nowrap">Created Date</th>
+                    <th className="text-xs font-medium uppercase tracking-wide text-primary px-3 py-2 border-b border-primary border-opacity-20 text-right whitespace-nowrap">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -104,20 +125,20 @@ const Dashboard: React.FC = () => {
                     <tr><td colSpan={6} className="text-center py-8 text-gray-500">Loading proposals...</td></tr>
                   ) : proposals.length === 0 ? (
                     <tr><td colSpan={6} className="text-center py-8 text-gray-500">No proposals found.</td></tr>
-                  ) : proposals.map((proposal) => (
-                    <tr key={proposal.id} className="border-b last:border-b-0">
-                      <td className="py-3 px-2 sm:px-4">{proposal.customerName}</td>
-                      <td className="py-3 px-2 sm:px-4">{proposal.address}</td>
-                      <td className="py-3 px-2 sm:px-4">{proposal.squares}</td>
-                      <td className="py-3 px-2 sm:px-4">{proposal.createdBy}</td>
-                      <td className="py-3 px-2 sm:px-4">
+                  ) : proposals.map((proposal, idx) => (
+                    <tr key={proposal.id} className="bg-white border-b border-primary border-opacity-10 last:border-b-0">
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-left">{proposal.customerName}</td>
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-left">{proposal.address}</td>
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-right font-mono">{proposal.squares}</td>
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-left">{proposal.createdBy}</td>
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-right">
                         {proposal.createdAt && proposal.createdAt.seconds
                           ? new Date(proposal.createdAt.seconds * 1000).toLocaleDateString()
                           : typeof proposal.createdAt === 'string'
                           ? proposal.createdAt
                           : 'N/A'}
                       </td>
-                      <td className="py-3 px-2 sm:px-4">
+                      <td className="text-sm text-gray-700 px-3 py-2 whitespace-normal text-right">
                         <TableActionsMenu key={proposal.id + location.pathname} proposalId={proposal.id} onDelete={() => openDeleteModal(proposal)} />
                       </td>
                     </tr>
@@ -128,20 +149,13 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </section>
-      {/* Footer Debug Panel */}
-      <div className="w-full max-w-5xl mx-auto mt-4 bg-gray-900 text-gray-100 rounded p-4 text-xs overflow-x-auto">
-        <div className="mb-2 font-bold text-pink-300">Debug Panel</div>
-        <div><span className="font-semibold text-blue-300">Current User Email:</span> {auth.currentUser?.email || 'N/A'}</div>
-        <div><span className="font-semibold text-blue-300">Proposals (filtered):</span> <pre className="whitespace-pre-wrap">{JSON.stringify(proposals, null, 2)}</pre></div>
-        <div><span className="font-semibold text-blue-300">See window.dashboardDebug for more info.</span></div>
-      </div>
       {/* Delete Modal */}
       {showDeleteModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white rounded-xl shadow-lg p-6 w-full max-w-md relative animate-fadeIn">
+          <div className="bg-gray-50 rounded shadow-lg p-6 w-full max-w-md relative animate-fadeIn">
             {/* Close Icon */}
             <button
-              className="absolute top-3 right-3 w-10 h-10 p-3 flex items-center justify-center text-gray-400 hover:text-gray-700 text-xl font-bold rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="absolute top-3 right-3 w-10 h-10 p-3 flex items-center justify-center text-gray-400 hover:text-gray-700 text-xl font-bold rounded focus:outline-none focus:ring-2 focus:ring-primary"
               onClick={closeDeleteModal}
               aria-label="Close"
             >
@@ -150,22 +164,42 @@ const Dashboard: React.FC = () => {
             <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Delete Proposal</h3>
             <p className="text-gray-700 mb-6 text-center">Are you sure you want to delete the proposal for <span className="font-semibold">{proposalToDelete?.customerName}</span>? This action cannot be undone.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-6">
-              <button
-                className="bg-gray-100 text-gray-800 px-6 py-2 rounded-full font-semibold hover:bg-gray-200 transition-colors w-full sm:w-auto"
-                onClick={closeDeleteModal}
-              >
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={closeDeleteModal}>
                 Cancel
-              </button>
-              <button
-                className="bg-red-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-red-700 transition-colors w-full sm:w-auto"
-                onClick={handleDelete}
-              >
+              </Button>
+              <Button type="button" variant="primary" className="w-full sm:w-auto bg-red-600 hover:bg-red-700" onClick={handleDelete}>
                 Delete
-              </button>
+              </Button>
             </div>
           </div>
         </div>
       )}
+      <CreateProposalModal
+        open={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={() => {
+          // re-fetch proposals
+          const fetchProposals = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+              const user = auth.currentUser;
+              if (!user || !user.email) {
+                setProposals([]);
+                setLoading(false);
+                return;
+              }
+              const snapshot = await getDocs(collection(db, 'proposals'));
+              const allProposals = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+              setProposals(allProposals.filter((p: any) => p.createdBy === user.email));
+            } catch (err: any) {
+              setError('Failed to load proposals. Check your Firestore rules and network connection.');
+            }
+            setLoading(false);
+          };
+          fetchProposals();
+        }}
+      />
     </main>
   );
 };

@@ -1,0 +1,10 @@
+---
+description: Forms and Login rules
+globs: ["src/pages/Login.tsx", "src/pages/CreateAccount.tsx"]
+alwaysApply: true
+---
+
+- Layout: `max-w-md mx-auto p-6 space-y-4`
+- Labels: `text-sm font-medium text-gray-700`
+- Inputs: `border px-3 py-2`
+- Errors: `text-red-500 text-sm`

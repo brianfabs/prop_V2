@@ -1,0 +1,12 @@
+---
+description: Card UI for dashboard and proposal blocks
+globs: ["src/components/**/*Card.tsx", "src/pages/**/*Card.tsx"]
+alwaysApply: true
+---
+
+- Use `rounded-xl`, `shadow-sm`, `p-4`, and `bg-white` as the card base.
+- Maintain vertical spacing with `space-y-2` or `space-y-4` depending on content density.
+- Use `flex flex-col` or `grid` layout for structured internal sections.
+- Apply `text-base text-gray-700` for body content, and `font-semibold text-lg` for titles.
+- For dashboard metric cards, include `text-sm uppercase text-muted` labels.
+- Avoid hardcoded pixel values; use Tailwind spacing tokens (`p-4`, `gap-6`, etc.).

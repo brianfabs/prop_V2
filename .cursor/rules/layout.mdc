@@ -1,0 +1,10 @@
+---
+description: Responsive layout and mobile scaling
+globs: ["src/pages/**/*.tsx"]
+alwaysApply: true
+---
+
+- Layouts should be mobile-first: stack content vertically by default.
+- Add responsive Tailwind classes like `md:flex-row`, `lg:grid-cols-2` to scale up.
+- Avoid pixel-based media queries; use Tailwind breakpoints only.
+- Use `overflow-auto` and `max-w-screen-lg` containers for consistent scaling.

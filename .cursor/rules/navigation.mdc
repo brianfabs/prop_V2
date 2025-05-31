@@ -1,0 +1,9 @@
+---
+description: Navigation & Header
+globs: ["src/components/NavBar.tsx", "src/components/HeaderNav.tsx"]
+alwaysApply: true
+---
+
+- Use `flex`, `gap-*`, `items-center`
+- No inline `style={{...}}`
+- Hover effects: `hover:text-[#7896CA]`

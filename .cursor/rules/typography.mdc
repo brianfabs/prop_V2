@@ -1,0 +1,10 @@
+---
+description: Typography standards
+globs: ["src/components/**/*.tsx"]
+alwaysApply: true
+---
+
+- `text-base font-normal` for body text (16px, 400)
+- All headers use `font-medium text-primary`
+- Label text: `text-xs font-medium uppercase tracking-wide`
+- Apply `mb-2` under h1-h3 headers; `mt-6` above sections

@@ -1,0 +1,11 @@
+---
+description: TableActionsMenu actions and styling
+globs: ["src/components/TableActionsMenu.tsx"]
+alwaysApply: true
+---
+
+- Use a vertical dropdown with `bg-white`, `shadow-md`, and `rounded-md`.
+- Action items should use `text-sm text-gray-700` with `hover:bg-muted` and `cursor-pointer`.
+- Include icons using `lucide-react`, aligned with `flex items-center gap-2`.
+- Ensure accessibility via `role="menuitem"` and `tabIndex={0}`.
+- Animate open/close with `transition-opacity duration-200 ease-in-out`.

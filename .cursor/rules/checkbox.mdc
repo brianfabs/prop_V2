@@ -1,0 +1,10 @@
+---
+description: Checkbox component rules
+globs: ["src/components/**/*Checkbox.tsx"]
+alwaysApply: true
+---
+
+- Unchecked: `border text-gray-500/30`
+- Checked: `bg-primary border-primary text-white`
+- Use `accent-primary`, `aria-label`, and `gap-2`
+- Label: `text-sm`
