@@ -10,6 +10,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import ContentManagement from './pages/ContentManagement';
 import UserManagement from './pages/UserManagement';
 import LoanOptions from './pages/LoanOptions';
+import ForgotPassword from './pages/ForgotPassword';
 import { auth } from './firebase/firebase-config';
 import { signOut } from 'firebase/auth';
 import { RoofingOptionsProvider } from './context/RoofingOptionsContext';
@@ -48,6 +49,7 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/create-account" element={<CreateAccount />} />
       <Route path="/proposal/:id" element={<ProposalView />} />
